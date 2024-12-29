@@ -1,5 +1,5 @@
 import {User} from '../models/index.js'
-import {signToken, AuthenticationError, Context} from '../utils/auth.js';
+import {signToken, AuthenticationError} from '../utils/auth.js';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request } from 'express';
 
@@ -100,7 +100,7 @@ const resolvers = {
             // Return the updated user with the newly saved book
             return updatedUser;
         },
-   removeBook: async (_parent: any, { bookId }: { bookId: string }, context: Context) => {
+   removeBook: async (_parent: any, { bookId }: { bookId: string }, context: any) => {
       if (!context.user) {
         throw new AuthenticationError('You need to be logged in');
       }

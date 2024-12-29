@@ -4,9 +4,7 @@ import dotenv from 'dotenv';
 import { User } from '../models';
 dotenv.config();
 
-export interface Context {
-  user?: UserPayload;
-}
+
 
 export const authenticateToken = async ({ req }: any) => {
   // Allows token to be sent via req.body, req.query, or headers
