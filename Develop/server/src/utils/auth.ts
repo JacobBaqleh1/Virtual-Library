@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { GraphQLError } from 'graphql';
 import dotenv from 'dotenv';
-import { User } from '../models';
+import { User } from '../models/index.js';
 dotenv.config();
 
 
