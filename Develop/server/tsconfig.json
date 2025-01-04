@@ -5,7 +5,7 @@
      "rootDir": "src",
 
     /* Emit */
-    "outDir": "src/config/dist" /* Specify an output folder for all emitted files. */
+    "outDir": "dist" /* Specify an output folder for all emitted files. */
     // "noEmitOnError": true /* Disable emitting files if any type checking errors are reported. */
   },
   "include": ["src", "src/config", "src/models", "src/schemas", "src/utils", "src/types", "src/server.ts"],
