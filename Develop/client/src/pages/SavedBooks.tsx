@@ -1,5 +1,5 @@
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
-import { useQuery,useMutation  } from '@apollo/client';
+import { useQuery, useMutation  } from '@apollo/client';
 
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
@@ -31,41 +31,27 @@ const SavedBooks = () => {
 
   // Function to delete a book
   const handleDeleteBook = async (bookId: string) => {
-    console.log(bookId,'hi jacob')
-    if (!Auth.loggedIn()) {
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
       return false;
     }
-const token = Auth.loggedIn() ? Auth.getToken() : null;
-if (!bookId) {
-    console.error('No bookId provided');
-    return;
-  }
-console.log(token)
-    try {
-     console.log('hi jacob prt 2', bookId)
-      const response = await removeBook({
-      variables: { bookId },
-      context: {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        },
-    });
 
- 
-      // Update localStorage and refetch the user data
-     if (response && response.data && response.data.removeBook) {
-  setUserData(response.data.removeBook); // Update state with the new user data
-}
+    try {
+      console.log(bookId)
+      await removeBook({
+        variables: { bookId }
+      });
+
+      // upon success, remove book's id from localStorage
       removeBookId(bookId);
-    
     } catch (err) {
-      console.error('Error deleting book:', err);
+      console.error(err);
     }
   };
-  if (loading) {
-    return <h2>LOADING...</h2>;
-  }
+
+ 
+ 
 
   // if data isn't here yet, say so
   if (loading) {

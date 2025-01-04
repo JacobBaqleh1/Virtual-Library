@@ -1,7 +1,6 @@
 import {User} from '../models/index.js'
 import {signToken, AuthenticationError} from '../utils/auth.js';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { Request } from 'express';
+console.log('hi')
 
 interface UserArgs {
     username: string;
@@ -22,32 +21,8 @@ interface BookArgs{
         bookId:string 
     }
 }
-const secret = process.env.JWT_SECRET_KEY || '';
 
-interface UserPayload extends JwtPayload {
-  _id: string;
-  username: string;
-  email: string;
-}
 
-const contextMiddleware = ({ req }: { req: Request }) => {
-  const token = req.headers.authorization || '';
-
-  if (token) {
-    try {
-      const decoded = jwt.verify(token.split(' ')[1], secret) as UserPayload;
-      if (typeof decoded !== 'string') {
-        req.user = decoded;
-      } else {
-        throw new AuthenticationError('Invalid token');
-      }
-    } catch (err) {
-      throw new AuthenticationError('Invalid/Expired token');
-    }
-  }
-
-  return req;
-};
 const resolvers = {
     Query: {
         user: async(_parent:any, {username}:UserArgs) => {
@@ -106,16 +81,28 @@ const resolvers = {
       }
       console.log('Context user:', context.user);
       console.log('Removing book with ID:', bookId);
-      const updatedUser = await User.findOneAndUpdate(
-         { _id: context.user._id },
-        { $pull: { savedBooks: { bookId } } },
-        { new: true }
-      )
+      if (!bookId) {
+        throw new Error('bookId is undefined');
+      }
+      try {
+           
 
-      return updatedUser;
+
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: { bookId: bookId } } },
+          { new: true }
+        ).populate('savedBooks');
+        console.log('Updated user after removing book:', updatedUser);
+        return updatedUser;
+      } catch (error) {
+        console.error('Error removing book:', error);
+        throw new Error('Failed to remove book');
+      }
+    },
     },
 
     }
-}
 
-export default {resolvers, contextMiddleware};
+
+export default {resolvers, };
