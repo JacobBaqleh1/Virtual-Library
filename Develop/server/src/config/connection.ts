@@ -7,7 +7,9 @@ const MONGODB_URI = process.env.MONGODB_URI || '';
 
 const db = async (): Promise<typeof mongoose.connection> => {
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI),{
+      dbName: 'mernshopping'
+    };
     console.log('Database connected.');
     return mongoose.connection;
   } catch (error) {
